@@ -5,61 +5,127 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  TextInput,
-  ToastAndroid,
+  FlatList,
+  Alert,
 } from 'react-native';
 import Storage from '../helper/Storage';
 import {Picker} from '@react-native-picker/picker';
 import {LogBox} from 'react-native';
-
-// Ignore log notification by message:
-LogBox.ignoreLogs(['Warning: ...']);
-
-// Ignore all log notifications:
-LogBox.ignoreAllLogs();
-
 export default class driverProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Name: '',
-      PhoneNo: '',
-      CNIC: '',
-      Email: '',
-      Password: '',
-      type: 1,
+      // Name: '',
+      // PhoneNo: '',
+      // CNIC: '',
+      // Email: '',
+      // Password: '',
+      // type: 1,
+      listProfile: [],
     };
+    this.fetchProfile();
   }
 
-  Go = () =>
-   {
-       
-    
-    };
-   
-  storeUserDateToDateBase = () => {
+  fetchProfile = () => {
     Storage.firebase
       .database()
       .ref('Users/' + Storage.userUID)
-      .set({
-        Name: this.state.Name,
-        Email: this.state.Email,
-        PhoneNo: this.state.PhoneNo,
-        CNIC: this.state.CNIC,
-        Type: this.state.type,
-        bookingmessage: 'empty',
-      })
-      .then(() => {
-        this.props.navigation.goBack();
+      .on('value', data => {
+        var list = [];
+        this.state.listProfile = [];
+        list = data.toJSON();
+        for (var index in list) {
+          this.state.listProfile.push(list[index]);
+        }
+        this.setState({
+          listProfile: this.state.listProfile,
+        });
       });
   };
+
+  deleteProfile = uid => {
+    Storage.firebase
+      .database()
+      .ref('Users/' + Storage.userUID)
+      .remove();
+  };
+  // storeUserDateToDateBase = () => {
+  //   Storage.firebase
+  //     .database()
+  //     .ref('Users/' + Storage.userUID)
+  //     .set({
+  //       Name: this.state.Name,
+  //       Email: this.state.Email,
+  //       PhoneNo: this.state.PhoneNo,
+  //       CNIC: this.state.CNIC,
+  //       Type: this.state.type,
+  //       bookingmessage: 'empty',
+  //     })
+  //     .then(() => {
+  //       this.props.navigation.goBack();
+  //     });
+  // };
+
+  renderItem = ({item, index}) => (
+    <View
+      key={index}
+      style={{
+        borderWidth: 1,
+        borderColor: '#465881',
+        width: '95%',
+        alignSelf: 'center',
+        height: 65,
+        borderRadius: 5,
+        marginBottom: 10,
+      }}>
+      <View
+        style={{
+          marginHorizontal: '2%',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <View>
+          <Text style={{color: 'white', padding: 5}}>{item.Name}</Text>
+          <Text style={{color: 'white', padding: 5}}>{item.Email}</Text>
+        </View>
+        <View>
+          <Text style={{color: 'white', padding: 5}}>Nmae: {item.Name}</Text>
+          <Text style={{color: 'white', padding: 5}}>email: {item.Email}</Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        style={{justifyContent: 'center'}}
+        onPress={() => {
+          Alert.alert(
+            'Confirmation',
+            'Are you sure you want to delete your account ' +
+              `'${item.Name}' '${item.Email}'`,
+            [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress: () => this.deleteProfile(item.UID)},
+            ],
+          );
+        }}>
+        <Text style={{color: '#ED1C24', fontSize: 16}}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>User Profile</Text>
+        <FlatList
+          data={this.state.listProfile}
+          renderItem={this.renderItem}
+          keyExtractor={item => item.id}
+        />
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.SignupBtn}
           onPress={() => {
             this.signUp();
@@ -72,7 +138,8 @@ export default class driverProfile extends React.Component {
             this.signUp();
           }}>
           <Text style={styles.loginText}>2nd Button</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
         <TouchableOpacity
           style={styles.SignupBtn}
           onPress={() => {

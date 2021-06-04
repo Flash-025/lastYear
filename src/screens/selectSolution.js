@@ -1,102 +1,222 @@
-import * as React from 'react';
-import { View, Button, StyleSheet, TouchableOpacity, Text, TextInput, FlatList, Alert } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import Storage from '../helper/Storage'
+import React, {Component} from 'react';
+import {Switch,ScrollView,StyleSheet,Text,View,TouchableOpacity,} from 'react-native';
+// import Constants from 'expo-constants';
+import * as Animatable from 'react-native-animatable';
+import Collapsible from 'react-native-collapsible';
+import Accordion from 'react-native-collapsible/Accordion';
 
-class selectSolution extends React.Component {
-    constructor(props) {
-        super(props)
-        // this.state = {
-        //     solutions: 
-        //     [
-        //         {solution1:'one ' , method:" panture"},
-        //             {solution2 :'two ' , method:" break fail"},
-        //             {solution3 :'three ' , method:" terminal"},
-        //             {solution4 :'four' , method:" nosol"},
+const solutionList2 =
+  'Its easy to tell when a car is overheating. Usually, there is smoking coming from underneath the hood.\nThe first thing one should, as Wheel Scene reports, is to turn off the AC. Instead, switch on the heater. If traffic is busy, donot fear. When reaching a complete stop, switch the gear to neutral and accelerate on the gas pedal.\nThis trick keeps the car running, which is important for ensuring that the radiator is fan keeps spinning. As soon as possible, it is best to pull off to the side of the road and lift up the hood. The driver should wait some time while everything cools down before driving again. ';
+const solutionList1 =
+  'Jump starting the car for this, you need a jumper cable and a donor car whose battery you will use to charge your car. Place the positive and negative terminals of the jumper cable on the positive and negative terminal of the donor car battery respectively. Then start the donor car and let it run for a few minutes. After some time, your car battery would be charged enough for ignition and once it is done, try the ignition of your car. You’ll be good to go. Want to skip the hassle? Simply book a jumpstart service with GoMechanic and we will handle the situation for you.\nCharging the battery: if you have access to a mechanic in a situation of car battery discharge, then the best thing to do is get the battery removed and the mechanic will put it up on charging so that it can attain all the juice back. These practices can work a couple of times maybe but if your car battery isn’t responding even after trying both the things then you probably want to consider getting a new battery for your car';
+const CONTENT = [
+  {
+    title: 'How to fix Dead Battery issue?',
+    content: solutionList1,
+  },
+  {
+    title: 'Overheating Engine Problem',
+    content: solutionList2,
+  },
+  {
+    title: 'How ti fix Flat Tire',
+    content: solutionList2,
+  },
+  {
+    title: 'Fourth',
+    content: solutionList2,
+  },
+  {
+    title: 'Fifth',
+    content: solutionList2,
+  },
+];
 
-        //     ]
-        // }   
-    }
-    render() {
-        return (
-          <View style={styles.container}>
-             <Text style={styles.logo}>solution List </Text>
-            {/* <FlatList
-              data={this.state.solutions}
-              renderItem={({item}) => (
-                <Text style={{fontSize: 100}}>{item.method}</Text>
-              )}
+const SELECTORS = [
+  {
+    title: 'First',
+    value: 0,
+  },
+  {
+    title: 'Third',
+    value: 2,
+  },
+  {
+    title: 'None',
+  },
+];
+
+export default class selectSolution extends Component {
+  state = {
+    activeSections: [],
+    collapsed: true,
+    multipleSelect: true,
+  };
+
+  toggleExpanded = () => {
+    this.setState({collapsed: !this.state.collapsed});
+  };
+
+  setSections = sections => {
+    this.setState({
+      activeSections: sections.includes(undefined) ? [] : sections,
+    });
+  };
+
+  renderHeader = (section, _, isActive) => {
+    return (
+      <Animatable.View
+        duration={400}
+        style={[styles.header, isActive ? styles.active : styles.inactive]}
+        transition="backgroundColor">
+        <Text style={styles.headText}>{section.title}</Text>
+      </Animatable.View>
+    );
+  };
+
+  renderContent(section, _, isActive) {
+    return (
+      <Animatable.View
+        duration={400}
+        style={[styles.content, isActive ? styles.active : styles.inactive]}
+        transition="backgroundColor">
+        <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
+          {section.content}
+        </Animatable.Text>
+      </Animatable.View>
+    );
+  }
+
+  render() {
+    const {multipleSelect, activeSections} = this.state;
+
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={{paddingTop: 30}}>
+          <Text style={styles.title}>Self Guide</Text>
+
+          {/* <View style={styles.multipleToggle}>
+            <Text style={styles.multipleToggle__title}>Multiple Select?</Text>
+            <Switch
+              value={multipleSelect}
+              onValueChange={a => this.setState({multipleSelect: a})}
             />
-            <TouchableOpacity
-              style={styles.SignupBtn}
-              onPress={() => {
-                this.props.navigation.goBack();
-              }}>
-              <Text style={[styles.loginText, {fontSize: 16}]}>Go back</Text>
-            </TouchableOpacity> */}
-            //////////////////////// ////////////////////////
-            
-              <Text style={styles.logo}>User Profile</Text>
+          </View> */}
 
-              <TouchableOpacity
-                style={styles.SignupBtn}
-               >
-                <Text style={styles.loginText}>1st Button </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-              >
-                <Text style={styles.loginText}>2nd Button</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-              >
-                <Text style={styles.loginText}>3rd Button</Text>
-              </TouchableOpacity>
+          {/* <View style={styles.selectors}>
+            <Text style={styles.selectTitle}>Select:</Text>
 
-              
-            
-          </View>
-        );
-    }
+            {SELECTORS.map(selector => (
+              <TouchableOpacity
+                key={selector.title}
+                onPress={() => this.setSections([selector.value])}>
+                <View style={styles.selector}>
+                  <Text
+                    style={
+                      activeSections.includes(selector.value) &&
+                      styles.activeSelector
+                    }>
+                    {selector.title}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View> */}
+
+          {/* <TouchableOpacity onPress={this.toggleExpanded}>
+            <View style={styles.header}>
+              <Text style={styles.headerText}>How to fix Break</Text>
+            </View>
+          </TouchableOpacity>
+          <Collapsible collapsed={this.state.collapsed} align="center">
+            <View style={styles.content}>
+              <Text>
+                Bacon ipsum dolor amet chuck turducken landjaeger tongue spare
+                ribs
+              </Text>
+            </View>
+          </Collapsible> */}
+          <Accordion
+            activeSections={activeSections}
+            sections={CONTENT}
+            touchableComponent={TouchableOpacity}
+            expandMultiple={multipleSelect}
+            renderHeader={this.renderHeader}
+            renderContent={this.renderContent}
+            duration={400}
+            onChange={this.setSections}
+            renderAsFlatList={false}
+          />
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#003f5c',
+    backgroundColor: '#F4FCFF',
+    paddingTop: 55,
+    // backgroundColor: 'rgba(255,255,255,1)',
   },
-
-  container: {
-    flex: 1,
-    backgroundColor: '#003f5c',
-    alignItems: 'center',
-  },
-  logo: {
+  title: {
     fontWeight: 'bold',
+    textAlign: 'center',
+    // color: '#fb5b5a',
     fontSize: 30,
-    color: '#fb5b5a',
-    marginTop: '15%',
-    marginBottom: '5%',
+    marginBottom: '15%',
   },
-  input: {
-    width: 350,
-    height: 55,
-    backgroundColor: '#465881',
-    margin: 10,
-    padding: 8,
-    color: 'white',
-    borderRadius: 14,
-    fontSize: 18,
+  header: {
+    backgroundColor: '#003f5c',
+    padding: 10,
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: 16,
     fontWeight: '500',
+    color: 'white',
+    fontWeight: 'bold',
   },
+  headText: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '500',
+    fontWeight: 'bold',
+  },
+  content: {
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  active: {
+    backgroundColor: 'rgba(255,255,255,1)',
+  },
+  inactive: {
+    backgroundColor: 'rgba(245,252,255,1)',
+  },
+  selectors: {
+    marginBottom: 10,
+    flexDirection: 'row',
 
-  ExitBtn: {
-    width: '80%',
-    backgroundColor: '#fb5b5a',
-    borderRadius: 25,
-    height: 50,
-    alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: '30%',
+  },
+  selector: {
+    backgroundColor: '#F5FCFF',
+    padding: 10,
+  },
+  activeSelector: {
+    fontWeight: 'bold',
+  },
+  selectTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    padding: 10,
+  },
+  multipleToggle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 30,
+    alignItems: 'center',
   },
   SignupBtn: {
     width: '80%',
@@ -108,23 +228,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  loginText: {
-    color: 'white',
+  multipleToggle__title: {
+    fontSize: 16,
+    marginRight: 8,
   },
-  inputView: {
-    width: '80%',
-    backgroundColor: '#465881',
-    borderRadius: 25,
-    height: 50,
-    marginBottom: 20,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  inputText: {
-    height: 50,
-    color: 'white',
-  },
-  //////////////////////////////////////
-  
 });
-export default selectSolution

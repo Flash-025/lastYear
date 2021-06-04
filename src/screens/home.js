@@ -199,7 +199,7 @@ class home extends Component
                 backgroundColor: '#465881',
               }}
               onPress={() => {
-                this.props.navigation.navigate('solutions');
+                this.props.navigation.navigate('selectSolution');
               }}
               >
               <Text style={{textAlign: 'center', color: 'white'}}>
@@ -372,22 +372,18 @@ class home extends Component
             </TouchableOpacity>
 
             <TouchableOpacity
-              disabled={this.state.userData.registerWorkshop != undefined}
               style={{
                 borderRadius: 6,
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '45%',
-                backgroundColor:
-                  this.state.userData.registerWorkshop != undefined
-                    ? 'gray'
-                    : '#465881',
+                backgroundColor: '#465881',
               }}
               onPress={() => {
-                this.props.navigation.navigate('serviceProviderP');
+                this.props.navigation.navigate('driverProfile');
               }}>
               <Text style={{textAlign: 'center', color: 'white'}}>
-                Manage My Account
+                My Profile
               </Text>
             </TouchableOpacity>
           </View>

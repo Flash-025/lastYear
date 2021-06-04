@@ -30,19 +30,16 @@ function App() {
         <Stack.Screen name="signIn" component={signInScreen} />
         <Stack.Screen name="signUp" component={signUpScreen} />
         <Stack.Screen name="home" component={homeScreen} />
-        <Stack.Screen
-          name="registerAutomobile"
-          component={registerAutomobile}
-        />
+        <Stack.Screen name="registerAutomobile" component={registerAutomobile}/>
         <Stack.Screen name="MRVehicle" component={manageRegisterVehicle} />
         <Stack.Screen name="maps" component={findResources} />
         <Stack.Screen name="Workshop" component={registerWorkshop} />
         <Stack.Screen name="Mechanic" component={selectMechanic} />
         <Stack.Screen name="details" component={workshopDetails} />
         <Stack.Screen name="manageRequest" component={manageRequests} />
-        <Stack.Screen name="driverP" component={driverProfile} />
+        <Stack.Screen name="driverProfile" component={driverProfile} />
         <Stack.Screen name="serviceProviderP" component={serviceProviderProfile}/>
-        <Stack.Screen name="solutions" component={selectSolution} />
+        <Stack.Screen name="selectSolution" component={selectSolution} />
       </Stack.Navigator>
     </NavigationContainer>
   );
